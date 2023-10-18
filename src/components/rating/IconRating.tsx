@@ -1,9 +1,9 @@
 import React from "react";
-import angryIcon from "../../assets/icons/angryIcon.png";
-import badIcon from "../../assets/icons/badIcon.png";
-import okIcon from "../../assets/icons/okIcon.png";
-import goodIcon from "../../assets/icons/goodIcon.png";
-import awesomeIcon from "../../assets/icons/awesomeIcon.png";
+import angryIcon from "../../assets/icons/terrible.svg";
+import badIcon from "../../assets/icons/bad.svg";
+import okIcon from "../../assets/icons/okay.svg";
+import goodIcon from "../../assets/icons/good.svg";
+import awesomeIcon from "../../assets/icons/awesome.svg";
 import { AvailbleIconRating, Icon, IconRatingEnum } from "./IconRating.type";
 import Image from "next/image";
 
