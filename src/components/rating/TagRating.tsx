@@ -1,3 +1,5 @@
+"use client";
+
 import React, { useState, Fragment, useRef } from "react";
 import CommentRating from "./CommentRating";
 import { IconRatingEnum } from "./IconRating.type";
@@ -66,7 +68,7 @@ const TagRating = ({
 }: TagRatingProps) => {
   //Dialog state
   const [open, setOpen] = useState<boolean>(false);
-
+  const commentInputRef = useRef();
   const { collection } = tagCollection[rating - 1];
 
   const handlerSelectTag = (tagValue: string) => {
@@ -80,7 +82,12 @@ const TagRating = ({
   const handleClose = () => {
     setOpen(false);
   };
-  const cancelButtonRef = useRef(null);
+
+  const handleSubmitComment = () => {
+    const comment:string = commentInputRef.current?.value??  ''
+    submitComment(comment);
+    setOpen(false);
+  };
 
   return (
     <div className="w-full h-[auto] p-0.5 round-md flex justify-center flex-wrap animate-fadeIn gap-2 mt-2">
@@ -105,12 +112,7 @@ const TagRating = ({
         + Add a comment for the restaurant
       </button>
       <Transition.Root show={open} as={Fragment}>
-        <Dialog
-          as="div"
-          className="relative z-10"
-          initialFocus={cancelButtonRef}
-          onClose={handleClose}
-        >
+        <Dialog as="div" className="relative z-10" onClose={handleClose}>
           <Transition.Child
             as={Fragment}
             enter="ease-out duration-300"
@@ -145,8 +147,10 @@ const TagRating = ({
                     <input
                       type="text"
                       id="feedback"
+                      defaultValue={comment}
                       className="block pb-2.5 px-0 w-full text-sm text-black bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-gray-300 peer"
-                      placeholder=" "
+                      placeholder=""
+                      ref={commentInputRef}
                     />
                     <label
                       htmlFor={"feedback"}
@@ -160,7 +164,7 @@ const TagRating = ({
                     <button
                       type="button"
                       className="inline-flex w-full justify-center rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500 sm:ml-3 sm:w-auto"
-                      onClick={handleClose}
+                      onClick={handleSubmitComment}
                     >
                       Save
                     </button>
@@ -168,7 +172,6 @@ const TagRating = ({
                       type="button"
                       className="mt-3 inline-flex w-full justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:mt-0 sm:w-auto"
                       onClick={handleClose}
-                      ref={cancelButtonRef}
                     >
                       Cancel
                     </button>
