@@ -1,6 +1,7 @@
 import { AvailbleIconRating } from "@/components/rating/IconRating.type";
 
 export type Feedback = {
+  id: string | number
   type: FeedbackTypeAvailable;
   data: FeedbackData;
 };
