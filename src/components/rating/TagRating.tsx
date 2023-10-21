@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useState, Fragment, useRef } from "react";
-import CommentRating from "./CommentRating";
 import { IconRatingEnum } from "./IconRating.type";
 import { TagRatingProps } from "./TagRating.type";
 import { Transition, Dialog } from "@headlessui/react";
