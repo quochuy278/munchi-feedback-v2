@@ -7,6 +7,7 @@ import React, { useState, useEffect } from "react";
 import { Feedback, FeedbackTemplate } from "./FeedbackRating.type";
 import { AvailbleIconRating } from "@/components/rating/IconRating.type";
 import { useFeedbackStore } from "@/store";
+import { v4 as uuidv4 } from "uuid";
 
 export const metadata: Metadata = {
   title: {
@@ -22,22 +23,28 @@ const FeedbackRating = () => {
     prevPage,
     feedback,
     addFeedback,
+    updateFeedback,
   } = useFeedbackStore();
   const [ratingSelected, setRatingSelected] =
     useState<AvailbleIconRating | null>(null);
   const [comment, setComment] = useState<string>("");
   const [tag, setTag] = useState<string[]>([]);
-  console.log(currentPage);
-  console.log(feedback);
 
   useEffect(() => {
-    setComment("");
-    setTag([]);
-    setRatingSelected(null);
-  }, [feedback]);
+    if (feedback[currentPage]) {
+      setComment(feedback[currentPage].data.comment);
+      setTag(feedback[currentPage].data.tagsRating);
+      setRatingSelected(feedback[currentPage].data.iconRating);
+    } else {
+      setComment("");
+      setTag([]);
+      setRatingSelected(null);
+    }
+  }, [currentPage]);
 
   const handleSelectRating = (value: AvailbleIconRating) => {
     setRatingSelected(value);
+    console.log(tag.length);
   };
 
   const handleTagSelect = (tagValue: string) => {
@@ -55,10 +62,11 @@ const FeedbackRating = () => {
   const handleSubmitComment = (comment: string) => {
     setComment(comment);
   };
-
+  console.log(currentPage);
   // This function will handle page redirect and submit information if possible
   const handlePageRedirectAndSubmit = () => {
-    const feedback2: Feedback = {
+    const dynamicFeedbackData: Feedback = {
+      id: uuidv4(),
       type: feedbacksTemplates[currentPage].type,
       data: {
         iconRating: ratingSelected as AvailbleIconRating,
@@ -66,7 +74,6 @@ const FeedbackRating = () => {
         comment: comment,
       },
     };
-    console.log(feedback2);
 
     const existedFeedback = feedback.filter(
       (feedbackType: Feedback) =>
@@ -74,9 +81,16 @@ const FeedbackRating = () => {
     );
 
     if (!existedFeedback || existedFeedback.length === 0) {
-      addFeedback(feedback2);
-      nextPage(1);
+      addFeedback(dynamicFeedbackData);
+    } else {
+      updateFeedback(existedFeedback[0].id, dynamicFeedbackData);
     }
+
+    if (currentPage === feedbacksTemplates.length - 1) {
+      console.log("no page left to next");
+      return;
+    }
+    nextPage(1);
   };
 
   const handleBackHandler = () => {
@@ -101,6 +115,14 @@ const FeedbackRating = () => {
           </p>
         </div>
         <IconRating rating={ratingSelected} selectRating={handleSelectRating} />
+        <div className="w-full p-4 flex flex-col flex-wrap place-items-center text-center">
+          <h5 className="text-black text-xl font-medium">
+            What could we improve?
+          </h5>
+          <p className="text-black mt-1">
+            Your feedback helps us improve our products.
+          </p>
+        </div>
         {ratingSelected && (
           <TagRating
             comment={comment}
@@ -111,10 +133,26 @@ const FeedbackRating = () => {
           />
         )}
       </div>
-      <div className="w-full">
-        <button 
-          className="btn btn-primary w-full normal-case"
+
+      <div
+        className="w-full px-2 mb-2 flex gap-1
+      "
+      >
+        {feedback.length > 0 && currentPage > 0 && (
+          <button
+            className="btn btn-primary w-1/2 normal-case rounded-xl"
+            onClick={handleBackHandler}
+          >
+            Back
+          </button>
+        )}
+
+        <button
+          className={` ${
+            feedback.length > 0 && currentPage !== 0 ? "w-1/2" : "w-full"
+          } btn disabled:bg-gray-300 disabled:text-white  btn-primary`}
           onClick={handlePageRedirectAndSubmit}
+          {...(tag.length === 0 ? { disabled: true } : { disabled: false })}
         >
           Next
         </button>
