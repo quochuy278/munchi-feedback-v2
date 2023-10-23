@@ -4,14 +4,14 @@ import IconRating from "@/components/rating/IconRating";
 import TagRating from "@/components/rating/TagRating";
 import { Metadata } from "next";
 import React, { useState, useEffect } from "react";
-import { Feedback, FeedbackTemplate } from "./FeedbackRating.type";
+import { Feedback } from "./FeedbackRating.type";
 import { AvailbleIconRating } from "@/components/rating/IconRating.type";
 import { useBusinessStore, useFeedbackStore } from "@/store";
 import { v4 as uuidv4 } from "uuid";
 import Image from "next/image";
-import { useParams, useRouter } from "next/navigation";
+import { redirect, useParams, useRouter } from "next/navigation";
 import { submitFeedback } from "@/service/api";
-
+import { useQueryClient, useMutation } from "react-query";
 const FeedbackRating = ({ business }: { business: any }) => {
   const {
     currentPage,
@@ -25,11 +25,18 @@ const FeedbackRating = ({ business }: { business: any }) => {
   const { setBusiness } = useBusinessStore();
   const router = useRouter();
   const { slug } = useParams();
-
   const [ratingSelected, setRatingSelected] =
     useState<AvailbleIconRating | null>(null);
   const [comment, setComment] = useState<string>("");
   const [tag, setTag] = useState<string[]>([]);
+
+  const mutation = useMutation({
+    mutationFn: submitFeedback,
+    onSuccess: () => {
+      // Invalidate and refetch
+      router.push(`../thankyou/${slug}`);
+    },
+  });
 
   useEffect(() => {
     setBusiness(business.slug, business.name, business.logo);
@@ -96,9 +103,7 @@ const FeedbackRating = ({ business }: { business: any }) => {
         feedbackToSubmit = feedback;
       }
       try {
-        await submitFeedback(feedbackToSubmit);
-
-        return router.push(`../thankyou/${slug}`);
+        return mutation.mutate(feedbackToSubmit);
       } catch (error) {
         return error;
       }
@@ -169,9 +174,11 @@ const FeedbackRating = ({ business }: { business: any }) => {
             feedback.length > 0 && currentPage !== 0 ? "w-1/2" : "w-full"
           } btn disabled:bg-gray-300 disabled:text-white  btn-primary rounded-xl`}
           onClick={handlePageRedirectAndSubmit}
-          {...(tag.length === 0 ? { disabled: true } : { disabled: false })}
+          {...(tag.length === 0 || mutation.isLoading
+            ? { disabled: true }
+            : { disabled: false })}
         >
-          Next
+          {mutation.isLoading ? "Loading" : "Next"}
         </button>
       </div>
     </div>

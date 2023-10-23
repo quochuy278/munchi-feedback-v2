@@ -1,12 +1,12 @@
-import Layout from "@/components/Layout";
 import "./globals.css";
 import type { Metadata } from "next";
+import Providers from "./provider";
 
 export const metadata: Metadata = {
   title: "Munchi Feedback",
-  icons:{
-     icon: './favicon.ico'
-  }
+  icons: {
+    icon: "./favicon.ico",
+  },
 };
 
 export default function RootLayout({
@@ -16,7 +16,9 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body>{children}</body>
+      <body>
+        <Providers>{children}</Providers>
+      </body>
     </html>
   );
 }
