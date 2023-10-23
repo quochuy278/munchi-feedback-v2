@@ -67,7 +67,7 @@ const TagRating = ({
 }: TagRatingProps) => {
   //Dialog state
   const [open, setOpen] = useState<boolean>(false);
-  const commentInputRef = useRef();
+  const commentInputRef = useRef<HTMLInputElement | null>(null);
   const { collection } = tagCollection[rating - 1];
 
   const handlerSelectTag = (tagValue: string) => {
@@ -83,7 +83,7 @@ const TagRating = ({
   };
 
   const handleSubmitComment = () => {
-    const comment:string = commentInputRef.current?.value??  ''
+    const comment = commentInputRef.current!.value;
     submitComment(comment);
     setOpen(false);
   };
@@ -105,10 +105,12 @@ const TagRating = ({
       })}
 
       <button
-        className="badge badge-primary badge-outline font-medium p-3 bg-[#ffeded]"
+        className={` ${
+          !comment && "badge-outline bg-[#ffeded]"
+        } badge badge-primary  font-medium p-3 `}
         onClick={handleDialogOpen}
       >
-        + Add a comment for the restaurant
+        {comment ? comment : "+ Add a comment for the restaurant"}
       </button>
       <Transition.Root show={open} as={Fragment}>
         <Dialog as="div" className="relative z-10" onClose={handleClose}>

@@ -1,4 +1,5 @@
 import dynamic from "next/dynamic";
+import { RedirectType, redirect } from "next/navigation";
 
 const NoSSRFeedBackRating = dynamic(
   () => import("@/features/FeedbackRating/FeedbackRating"),
@@ -6,7 +7,7 @@ const NoSSRFeedBackRating = dynamic(
 );
 
 const Feedback = () => {
-  return <NoSSRFeedBackRating />;
+  redirect("error");
 };
 
 export default Feedback;

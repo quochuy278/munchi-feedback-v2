@@ -4,18 +4,15 @@ import IconRating from "@/components/rating/IconRating";
 import TagRating from "@/components/rating/TagRating";
 import { Metadata } from "next";
 import React, { useState, useEffect } from "react";
-import { Feedback, FeedbackTemplate } from "./FeedbackRating.type";
+import { Feedback } from "./FeedbackRating.type";
 import { AvailbleIconRating } from "@/components/rating/IconRating.type";
-import { useFeedbackStore } from "@/store";
+import { useBusinessStore, useFeedbackStore } from "@/store";
 import { v4 as uuidv4 } from "uuid";
-
-export const metadata: Metadata = {
-  title: {
-    absolute: "Munchi Feedback",
-  },
-};
-
-const FeedbackRating = () => {
+import Image from "next/image";
+import { redirect, useParams, useRouter } from "next/navigation";
+import { submitFeedback } from "@/service/api";
+import { useQueryClient, useMutation } from "react-query";
+const FeedbackRating = ({ business }: { business: any }) => {
   const {
     currentPage,
     feedbacksTemplates,
@@ -25,10 +22,25 @@ const FeedbackRating = () => {
     addFeedback,
     updateFeedback,
   } = useFeedbackStore();
+  const { setBusiness } = useBusinessStore();
+  const router = useRouter();
+  const { slug } = useParams();
   const [ratingSelected, setRatingSelected] =
     useState<AvailbleIconRating | null>(null);
   const [comment, setComment] = useState<string>("");
   const [tag, setTag] = useState<string[]>([]);
+
+  const mutation = useMutation({
+    mutationFn: submitFeedback,
+    onSuccess: () => {
+      // Invalidate and refetch
+      router.push(`../thankyou/${slug}`);
+    },
+  });
+
+  useEffect(() => {
+    setBusiness(business.slug, business.name, business.logo);
+  }, [business]);
 
   useEffect(() => {
     if (feedback[currentPage]) {
@@ -40,11 +52,10 @@ const FeedbackRating = () => {
       setTag([]);
       setRatingSelected(null);
     }
-  }, [currentPage]);
+  }, [currentPage, feedback]);
 
   const handleSelectRating = (value: AvailbleIconRating) => {
     setRatingSelected(value);
-    console.log(tag.length);
   };
 
   const handleTagSelect = (tagValue: string) => {
@@ -62,9 +73,9 @@ const FeedbackRating = () => {
   const handleSubmitComment = (comment: string) => {
     setComment(comment);
   };
-  console.log(currentPage);
+
   // This function will handle page redirect and submit information if possible
-  const handlePageRedirectAndSubmit = () => {
+  const handlePageRedirectAndSubmit = async () => {
     const dynamicFeedbackData: Feedback = {
       id: uuidv4(),
       type: feedbacksTemplates[currentPage].type,
@@ -87,9 +98,17 @@ const FeedbackRating = () => {
     }
 
     if (currentPage === feedbacksTemplates.length - 1) {
-      console.log("no page left to next");
-      return;
+      let feedbackToSubmit = [...feedback, dynamicFeedbackData];
+      if (feedbacksTemplates.length === feedback.length) {
+        feedbackToSubmit = feedback;
+      }
+      try {
+        return mutation.mutate(feedbackToSubmit);
+      } catch (error) {
+        return error;
+      }
     }
+
     nextPage(1);
   };
 
@@ -102,10 +121,16 @@ const FeedbackRating = () => {
       <div className="flex flex-col gap-1 place-items-center h-1/2 p-4">
         <div className="avatar  mt-6">
           <div className="w-24 rounded-full">
-            <img src="https://yt3.googleusercontent.com/-CFTJHU7fEWb7BYEb6Jh9gm1EpetvVGQqtof0Rbh-VQRIznYYKJxCaqv_9HeBcmJmIsp2vOO9JU=s900-c-k-c0x00ffffff-no-rj" />
+            <Image
+              src={business?.logo}
+              alt="business logo"
+              width={50}
+              height={50}
+              priority
+            />
           </div>
         </div>
-        <h2 className="text-black text-2xl">Juicy Burger</h2>
+        <h2 className="text-black text-2xl">{business?.name}</h2>
         <div className="w-full p-4 flex flex-col flex-wrap place-items-center text-center">
           <h5 className="text-black text-xl font-medium">
             {feedbacksTemplates[currentPage].question}
@@ -134,10 +159,7 @@ const FeedbackRating = () => {
         )}
       </div>
 
-      <div
-        className="w-full px-2 mb-2 flex gap-1
-      "
-      >
+      <div className="w-full px-2 mb-2 flex gap-1">
         {feedback.length > 0 && currentPage > 0 && (
           <button
             className="btn btn-primary w-1/2 normal-case rounded-xl"
@@ -150,11 +172,13 @@ const FeedbackRating = () => {
         <button
           className={` ${
             feedback.length > 0 && currentPage !== 0 ? "w-1/2" : "w-full"
-          } btn disabled:bg-gray-300 disabled:text-white  btn-primary`}
+          } btn disabled:bg-gray-300 disabled:text-white  btn-primary rounded-xl`}
           onClick={handlePageRedirectAndSubmit}
-          {...(tag.length === 0 ? { disabled: true } : { disabled: false })}
+          {...(tag.length === 0 || mutation.isLoading
+            ? { disabled: true }
+            : { disabled: false })}
         >
-          Next
+          {mutation.isLoading ? "Loading" : "Next"}
         </button>
       </div>
     </div>
