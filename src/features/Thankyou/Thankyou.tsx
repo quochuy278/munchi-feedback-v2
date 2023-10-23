@@ -8,6 +8,7 @@ import { createStripeSession } from "@/service/api";
 import { redirect } from "next/navigation";
 import { useBusinessStore, useFeedbackStore } from "@/store";
 import { useRouter } from "next/router";
+import { useQueryClient, useMutation } from "react-query";
 const Thankyou = ({ tipSuccess }: { tipSuccess?: boolean }) => {
   const [tipAmount, setTipAmount] = useState<number>(0);
   const { slug, logo, name } = useBusinessStore();
@@ -23,15 +24,20 @@ const Thankyou = ({ tipSuccess }: { tipSuccess?: boolean }) => {
     setTipAmount(tipValue);
   };
 
+  const mutation = useMutation({
+    mutationFn: createStripeSession,
+    onSuccess(data, variables, context) {
+      window.location.href = data.url;
+    },
+  });
+
   const handlePayment = async () => {
-    const session = await createStripeSession({
+    mutation.mutate({
       businessSlug: slug,
       tipValue: tipAmount * 100,
       productName: `${slug} tips`,
       productDescription: `Tipping for ${slug}`,
     });
-    console.log(session);
-    window.open(session.url);
   };
 
   const handleSubmitNewFeedback = () => {
@@ -82,10 +88,14 @@ const Thankyou = ({ tipSuccess }: { tipSuccess?: boolean }) => {
           className={`w-full btn btn-primary ${
             tipSuccess && "btn-outline"
           } normal-case border-none disabled:bg-gray-300 disabled:text-white`}
-          disabled={tipAmount === 0 && !tipSuccess}
+          disabled={(tipAmount === 0 && !tipSuccess) || mutation.isLoading}
           onClick={tipSuccess ? handleSubmitNewFeedback : handlePayment}
         >
-          {tipSuccess ? "Submit another feedback" : "Pay"}
+          {mutation.isLoading
+            ? "Loading"
+            : tipSuccess
+            ? "Submit another feedback"
+            : "Pay"}
         </button>
       </div>
     </div>
