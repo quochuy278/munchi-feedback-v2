@@ -1,7 +1,7 @@
 import { AvailbleIconRating } from "@/components/rating/IconRating.type";
 
 export type Feedback = {
-  id: string | number
+  id: string | number;
   type: FeedbackTypeAvailable;
   data: FeedbackData;
 };
@@ -17,4 +17,13 @@ export type FeedbackTemplate = {
   question: string;
 };
 
-export type FeedbackTypeAvailable = "service" | "order" | "decoration";
+export enum FeedbackEnum {
+  SERVICE = 1,
+  ORDER = 2,
+  DECORATION = 3,
+}
+
+export type FeedbackTypeAvailable =
+  | FeedbackEnum.SERVICE
+  | FeedbackEnum.ORDER
+  | FeedbackEnum.DECORATION;
