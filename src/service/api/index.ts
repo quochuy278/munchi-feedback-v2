@@ -1,5 +1,5 @@
 import axios from "axios";
-import { StripeSessionData } from "./index.type";
+import { Business, StripeSessionData } from "./index.type";
 import { Feedback } from "@/features/FeedbackRating/FeedbackRating.type";
 
 const fetchDataWithSlug = async (slug: string) => {
@@ -52,4 +52,16 @@ const submitFeedback = async (feedback: Feedback[]) => {
   }
 };
 
-export { fetchDataWithSlug, createStripeSession, submitFeedback };
+const saveBusiness = async (business: Business) => {
+  try {
+    const response = await axios.post(
+      `${process.env.NEXT_PUBLIC_PRIVATE_DOMAIN}business/create`,
+      business
+    );
+    return response.data;
+  } catch (error: any) {
+    throw new Error(`Failed to submit feedback session: ${error.message}`);
+  }
+};
+
+export { fetchDataWithSlug, createStripeSession, submitFeedback, saveBusiness };
