@@ -21,7 +21,7 @@ const handler: NextPage<{
 }> = async ({ params }) => {
   const businessSlug = params.slug;
   const data = await fetchDataWithSlug(businessSlug);
-  console.log(data);
+
   if (!data || data.error) {
     return redirect("/error");
   } else {

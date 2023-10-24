@@ -10,7 +10,6 @@ const fetchDataWithSlug = async (slug: string) => {
 
     return response.data.result;
   } catch (error: any) {
-    console.log(error);
     throw new Error(`Failed to fetch: ${error.message}`);
   }
 };
