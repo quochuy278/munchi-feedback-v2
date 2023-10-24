@@ -62,6 +62,7 @@ const IconRating = ({ rating, selectRating }: IconRatingProps) => {
                 alt="rating-icon-btn"
                 width={40}
                 height={40}
+                priority
               />
             </div>
 
