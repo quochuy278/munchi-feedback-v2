@@ -12,6 +12,7 @@ import Image from "next/image";
 import { redirect, useParams, useRouter } from "next/navigation";
 import { submitFeedback } from "@/service/api";
 import { useQueryClient, useMutation } from "react-query";
+
 const FeedbackRating = ({ business }: { business: any }) => {
   const {
     currentPage,
@@ -22,7 +23,7 @@ const FeedbackRating = ({ business }: { business: any }) => {
     addFeedback,
     updateFeedback,
   } = useFeedbackStore();
-  const { setBusiness } = useBusinessStore();
+  const { setBusiness, orderingId } = useBusinessStore();
   const router = useRouter();
   const { slug } = useParams();
   const [ratingSelected, setRatingSelected] =
@@ -36,10 +37,13 @@ const FeedbackRating = ({ business }: { business: any }) => {
       // Invalidate and refetch
       router.push(`../thankyou/${slug}`);
     },
+    onError: (error) => {
+      console.log(error);
+    },
   });
 
   useEffect(() => {
-    setBusiness(business.slug, business.name, business.logo);
+    setBusiness(business.id, business.slug, business.name, business.logo);
   }, [business]);
 
   useEffect(() => {
@@ -78,6 +82,7 @@ const FeedbackRating = ({ business }: { business: any }) => {
   const handlePageRedirectAndSubmit = async () => {
     const dynamicFeedbackData: Feedback = {
       id: uuidv4(),
+      businessOrderingId: business.id || orderingId,
       type: feedbacksTemplates[currentPage].type,
       data: {
         iconRating: ratingSelected as AvailbleIconRating,
