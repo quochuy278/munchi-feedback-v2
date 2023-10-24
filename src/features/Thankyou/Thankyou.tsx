@@ -26,7 +26,7 @@ const Thankyou = ({ tipSuccess }: { tipSuccess?: boolean }) => {
 
   const mutation = useMutation({
     mutationFn: createStripeSession,
-    onSuccess(data, variables, context) {
+    onSuccess(data) {
       window.location.href = data.url;
     },
   });
