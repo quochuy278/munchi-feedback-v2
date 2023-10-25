@@ -17,6 +17,8 @@ const FeedbackRating = ({ business }: { business: any }) => {
   const {
     currentPage,
     feedbacksTemplates,
+    tip,
+    setCurrentPage,
     nextPage,
     prevPage,
     feedback,
@@ -35,7 +37,11 @@ const FeedbackRating = ({ business }: { business: any }) => {
     mutationFn: submitFeedback,
     onSuccess: () => {
       // Invalidate and refetch
-      router.push(`../thankyou/${slug}`);
+      if (tip) {
+        router.push(`../thankyou/${slug}`);
+      } else {
+        router.push(`../thankyou`);
+      }
     },
     onError: (error) => {
       console.log(error);
@@ -47,6 +53,14 @@ const FeedbackRating = ({ business }: { business: any }) => {
   }, [business]);
 
   useEffect(() => {
+    if (feedback.length === feedbacksTemplates.length) {
+      setCurrentPage(feedbacksTemplates.length - 1);
+    } else {
+      setCurrentPage(feedback.length);
+    }
+  }, []);
+
+  useEffect(() => {
     if (feedback[currentPage]) {
       setComment(feedback[currentPage].data.comment);
       setTag(feedback[currentPage].data.tagsRating);
@@ -56,7 +70,7 @@ const FeedbackRating = ({ business }: { business: any }) => {
       setTag([]);
       setRatingSelected(null);
     }
-  }, [currentPage, feedback]);
+  }, [currentPage, feedback, setCurrentPage]);
 
   const handleSelectRating = (value: AvailbleIconRating) => {
     setRatingSelected(value);
@@ -80,6 +94,7 @@ const FeedbackRating = ({ business }: { business: any }) => {
 
   // This function will handle page redirect and submit information if possible
   const handlePageRedirectAndSubmit = async () => {
+   
     const dynamicFeedbackData: Feedback = {
       id: uuidv4(),
       businessOrderingId: business.id || orderingId,
