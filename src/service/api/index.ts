@@ -19,6 +19,8 @@ const createStripeSession = async ({
   productDescription,
   productName,
   tipValue,
+  successUrl,
+  businessOrderingId,
 }: StripeSessionData) => {
   try {
     const response = await axios(
@@ -26,10 +28,12 @@ const createStripeSession = async ({
       {
         method: "post",
         data: {
+          businessOrderingId: businessOrderingId,
           businessSlug: businessSlug,
           productDescription: productDescription,
           productName: productName,
           tipValue: tipValue,
+          successUrl: successUrl,
         },
       }
     );

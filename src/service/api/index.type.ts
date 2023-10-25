@@ -3,6 +3,8 @@ export type StripeSessionData = {
   tipValue: number;
   productName: string;
   productDescription: string;
+  successUrl: string;
+  businessOrderingId: number;
 };
 
 export type Business = {
