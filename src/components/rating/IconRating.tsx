@@ -6,6 +6,7 @@ import goodIcon from "../../assets/icons/good.svg";
 import awesomeIcon from "../../assets/icons/awesome.svg";
 import { AvailbleIconRating, Icon, IconRatingEnum } from "./IconRating.type";
 import Image from "next/image";
+import { useFeedbackStore } from "@/store";
 
 const Icons: Icon[] = [
   {
@@ -41,7 +42,12 @@ interface IconRatingProps {
 }
 
 const IconRating = ({ rating, selectRating }: IconRatingProps) => {
+  const { tip, setTip } = useFeedbackStore();
+
   const handleRatingSelect = (value: AvailbleIconRating) => {
+    if (value < 4 && tip) {
+      setTip();
+    }
     selectRating(value);
   };
 
