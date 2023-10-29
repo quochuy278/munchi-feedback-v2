@@ -26,7 +26,7 @@ const handler: NextPage<{
     return redirect("/error");
   } else {
     await saveBusiness({
-      logo: data.logo,
+      logo: data.logo ? data.logo : "",
       orderingId: data.id,
       slug: data.slug,
       name: data.name,
