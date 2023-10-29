@@ -1,19 +1,19 @@
 "use client";
-import React, { useEffect, useState } from "react";
-import checkIcon from "../../assets/icons/checkIcon.svg";
-import heartIcon from "../../assets/icons/heart.svg";
-import Image from "next/image";
 import PaymentTip from "@/components/rating/PaymentTip";
 import { createStripeSession } from "@/service/api";
-import { redirect } from "next/navigation";
 import { useBusinessStore, useFeedbackStore } from "@/store";
-import { useRouter } from "next/router";
-import { useQueryClient, useMutation } from "react-query";
+import Image from "next/image";
+import { redirect, useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+import { useMutation } from "react-query";
+import checkIcon from "../../assets/icons/checkIcon.svg";
+import heartIcon from "../../assets/icons/heart.svg";
+
 const Thankyou = ({ tipSuccess }: { tipSuccess?: boolean }) => {
   const [tipAmount, setTipAmount] = useState<number>(0);
-  const { slug, logo, name } = useBusinessStore();
+  const { slug, logo, name, orderingId } = useBusinessStore();
   const { feedback, clearAll } = useFeedbackStore();
-
+  const router = useRouter();
   useEffect(() => {
     if (!feedback || feedback.length === 0) {
       redirect(`../feedback/${slug}`);
@@ -37,12 +37,14 @@ const Thankyou = ({ tipSuccess }: { tipSuccess?: boolean }) => {
       tipValue: tipAmount * 100,
       productName: `${slug} tips`,
       productDescription: `Tipping for ${slug}`,
+      successUrl: `${process.env.NEXT_PUBLIC_BASE_DOMAIN}thankyou`,
+      businessOrderingId: orderingId,
     });
   };
 
   const handleSubmitNewFeedback = () => {
     clearAll();
-    redirect(`../feedback/${slug}`);
+    router.push(`../feedback/${slug}`);
   };
 
   return (
