@@ -10,7 +10,7 @@ const fetchDataWithSlug = async (slug: string) => {
 
     return response.data.result;
   } catch (error: any) {
-    throw new Error(`Failed to fetch: ${error.message}`);
+    throw new Error(error);
   }
 };
 
@@ -63,7 +63,7 @@ const saveBusiness = async (business: Business) => {
     );
     return response.data;
   } catch (error: any) {
-    throw new Error(`Failed to submit feedback session: ${error.message}`);
+    throw new Error(`Failed to save business: ${error.message}`);
   }
 };
 
