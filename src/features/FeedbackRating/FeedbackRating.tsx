@@ -1,17 +1,17 @@
 "use client";
 
 import IconRating from "@/components/rating/IconRating";
-import TagRating from "@/components/rating/TagRating";
-import { Metadata } from "next";
-import React, { useState, useEffect } from "react";
-import { Feedback } from "./FeedbackRating.type";
 import { AvailbleIconRating } from "@/components/rating/IconRating.type";
-import { useBusinessStore, useFeedbackStore } from "@/store";
-import { v4 as uuidv4 } from "uuid";
-import Image from "next/image";
-import { redirect, useParams, useRouter } from "next/navigation";
+import TagRating from "@/components/rating/TagRating";
 import { submitFeedback } from "@/service/api";
-import { useQueryClient, useMutation } from "react-query";
+import { useBusinessStore, useFeedbackStore } from "@/store";
+import Image from "next/image";
+import { useParams, useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+import { useMutation } from "react-query";
+import { v4 as uuidv4 } from "uuid";
+import { Feedback } from "./FeedbackRating.type";
+import restaurantHolder from "../../assets/icons/restaurant.png";
 
 const FeedbackRating = ({ business }: { business: any }) => {
   const {
@@ -94,7 +94,6 @@ const FeedbackRating = ({ business }: { business: any }) => {
 
   // This function will handle page redirect and submit information if possible
   const handlePageRedirectAndSubmit = async () => {
-   
     const dynamicFeedbackData: Feedback = {
       id: uuidv4(),
       businessOrderingId: business.id || orderingId,
@@ -142,7 +141,7 @@ const FeedbackRating = ({ business }: { business: any }) => {
         <div className="avatar  mt-6">
           <div className="w-24 rounded-full">
             <Image
-              src={business?.logo}
+              src={business.logo ? business.logo : restaurantHolder}
               alt="business logo"
               width={50}
               height={50}
