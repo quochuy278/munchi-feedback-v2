@@ -25,10 +25,13 @@ interface InitialState {
   currentPage: number;
   feedbacksTemplates: FeedbackTemplate[];
   feedback: Feedback[];
+  tip: boolean;
   addFeedback: (feedback: Feedback) => void;
   updateFeedback: (id: number | string, feedback: Feedback) => void;
+  setCurrentPage: (value: number) => void;
   nextPage: (value: number) => void;
   prevPage: (value: number) => void;
+  setTip: () => void;
   clearAll: () => void;
 }
 
@@ -43,6 +46,7 @@ const useFeedbackStore = create<InitialState>()(
       currentPage: 0,
       feedbacksTemplates: feedbacksTemplates,
       feedback: [],
+      tip: true,
       addFeedback: (feedback: Feedback) =>
         set((state) => ({
           feedback: addFeedback(state.feedback, feedback),
@@ -53,6 +57,10 @@ const useFeedbackStore = create<InitialState>()(
             fb.id === id ? updatedFeedback : fb
           ),
         })),
+      setCurrentPage: (value: number) =>
+        set((state) => ({
+          currentPage: value, // Enforce minimum 0
+        })),
       nextPage: (value: number) =>
         set((state) => ({
           currentPage: Math.max(0, state.currentPage + value), // Enforce minimum 0
@@ -61,10 +69,15 @@ const useFeedbackStore = create<InitialState>()(
         set((state) => ({
           currentPage: Math.max(0, state.currentPage - value),
         })),
+      setTip: () =>
+        set((state) => ({
+          tip: !state.tip,
+        })),
       clearAll: () => {
         set({
           feedback: [], // Clear the feedback array
           currentPage: 0, // Reset currentPage to 0
+          tip: true,
         });
       },
     }),

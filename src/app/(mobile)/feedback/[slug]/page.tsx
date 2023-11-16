@@ -1,4 +1,4 @@
-import { fetchDataWithSlug } from "@/service/api";
+import { fetchDataWithSlug, saveBusiness } from "@/service/api";
 import { useBusinessStore } from "@/store";
 import { Metadata, NextPage } from "next";
 import dynamic from "next/dynamic";
@@ -24,6 +24,13 @@ const handler: NextPage<{
 
   if (!data || data.error) {
     return redirect("/error");
+  } else {
+    await saveBusiness({
+      logo: data.logo ? data.logo : "",
+      orderingId: data.id,
+      slug: data.slug,
+      name: data.name,
+    });
   }
 
   return <NoSSRFeedBackRating business={data} />;
