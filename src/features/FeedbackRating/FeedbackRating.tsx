@@ -1,28 +1,31 @@
 "use client";
 
 import IconRating from "@/components/rating/IconRating";
-import TagRating from "@/components/rating/TagRating";
-import { Metadata } from "next";
-import React, { useState, useEffect } from "react";
-import { Feedback } from "./FeedbackRating.type";
 import { AvailbleIconRating } from "@/components/rating/IconRating.type";
-import { useBusinessStore, useFeedbackStore } from "@/store";
-import { v4 as uuidv4 } from "uuid";
-import Image from "next/image";
-import { redirect, useParams, useRouter } from "next/navigation";
+import TagRating from "@/components/rating/TagRating";
 import { submitFeedback } from "@/service/api";
-import { useQueryClient, useMutation } from "react-query";
+import { useBusinessStore, useFeedbackStore } from "@/store";
+import Image from "next/image";
+import { useParams, useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+import { useMutation } from "react-query";
+import { v4 as uuidv4 } from "uuid";
+import { Feedback } from "./FeedbackRating.type";
+import restaurantHolder from "../../assets/icons/restaurant.png";
+
 const FeedbackRating = ({ business }: { business: any }) => {
   const {
     currentPage,
     feedbacksTemplates,
+    tip,
+    setCurrentPage,
     nextPage,
     prevPage,
     feedback,
     addFeedback,
     updateFeedback,
   } = useFeedbackStore();
-  const { setBusiness } = useBusinessStore();
+  const { setBusiness, orderingId } = useBusinessStore();
   const router = useRouter();
   const { slug } = useParams();
   const [ratingSelected, setRatingSelected] =
@@ -34,13 +37,28 @@ const FeedbackRating = ({ business }: { business: any }) => {
     mutationFn: submitFeedback,
     onSuccess: () => {
       // Invalidate and refetch
-      router.push(`../thankyou/${slug}`);
+      if (tip) {
+        router.push(`../thankyou/${slug}`);
+      } else {
+        router.push(`../thankyou`);
+      }
+    },
+    onError: (error) => {
+      console.log(error);
     },
   });
 
   useEffect(() => {
-    setBusiness(business.slug, business.name, business.logo);
+    setBusiness(business.id, business.slug, business.name, business.logo);
   }, [business]);
+
+  useEffect(() => {
+    if (feedback.length === feedbacksTemplates.length) {
+      setCurrentPage(feedbacksTemplates.length - 1);
+    } else {
+      setCurrentPage(feedback.length);
+    }
+  }, []);
 
   useEffect(() => {
     if (feedback[currentPage]) {
@@ -52,7 +70,7 @@ const FeedbackRating = ({ business }: { business: any }) => {
       setTag([]);
       setRatingSelected(null);
     }
-  }, [currentPage, feedback]);
+  }, [currentPage, feedback, setCurrentPage]);
 
   const handleSelectRating = (value: AvailbleIconRating) => {
     setRatingSelected(value);
@@ -78,6 +96,7 @@ const FeedbackRating = ({ business }: { business: any }) => {
   const handlePageRedirectAndSubmit = async () => {
     const dynamicFeedbackData: Feedback = {
       id: uuidv4(),
+      businessOrderingId: business.id || orderingId,
       type: feedbacksTemplates[currentPage].type,
       data: {
         iconRating: ratingSelected as AvailbleIconRating,
@@ -122,7 +141,7 @@ const FeedbackRating = ({ business }: { business: any }) => {
         <div className="avatar  mt-6">
           <div className="w-24 rounded-full">
             <Image
-              src={business?.logo}
+              src={business.logo ? business.logo : restaurantHolder}
               alt="business logo"
               width={50}
               height={50}

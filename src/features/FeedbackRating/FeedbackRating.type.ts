@@ -2,6 +2,7 @@ import { AvailbleIconRating } from "@/components/rating/IconRating.type";
 
 export type Feedback = {
   id: string | number;
+  businessOrderingId: number;
   type: FeedbackTypeAvailable;
   data: FeedbackData;
 };
