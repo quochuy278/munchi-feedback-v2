@@ -58,11 +58,11 @@ const IconRating = ({ rating, selectRating }: IconRatingProps) => {
           <button
             onClick={() => handleRatingSelect(icon.value)}
             key={index}
-            className={`flex flex-col normal-case place-items-center ${
+            className={`w-[65px] h-[65px]flex flex-col normal-case items-center justify-evenly ${
               icon.value === rating && rating ? "opacity-100 " : "opacity-50"
             } ${!rating ? "opacity-100" : ""}`}
           >
-            <div>
+            <div className="flex justify-center items-center">
               <Image
                 src={icon.iconSource}
                 alt="rating-icon-btn"

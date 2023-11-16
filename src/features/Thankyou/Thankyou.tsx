@@ -10,10 +10,21 @@ import checkIcon from "../../assets/icons/checkIcon.svg";
 import heartIcon from "../../assets/icons/heart.svg";
 
 const Thankyou = ({ tipSuccess }: { tipSuccess?: boolean }) => {
-  const [tipAmount, setTipAmount] = useState<number>(0);
-  const { slug, logo, name, orderingId } = useBusinessStore();
-  const { feedback, clearAll } = useFeedbackStore();
   const router = useRouter();
+  const [tipAmount, setTipAmount] = useState<number>(0);
+  const { slug, orderingId } = useBusinessStore();
+
+  const { feedback, clearAll } = useFeedbackStore();
+
+  const baseUrl =
+    typeof window !== "undefined" && window.location.host
+      ? window.location.host
+      : "";
+  const protocol =
+    typeof window !== "undefined" && window.location.protocol
+      ? window.location.protocol
+      : "";
+
   useEffect(() => {
     if (!feedback || feedback.length === 0) {
       redirect(`../feedback/${slug}`);
@@ -32,12 +43,13 @@ const Thankyou = ({ tipSuccess }: { tipSuccess?: boolean }) => {
   });
 
   const handlePayment = async () => {
+    const successUrl = `${protocol}//${baseUrl}/thankyou`;
     mutation.mutate({
       businessSlug: slug,
       tipValue: tipAmount * 100,
       productName: `${slug} tips`,
       productDescription: `Tipping for ${slug}`,
-      successUrl: `${process.env.NEXT_PUBLIC_BASE_DOMAIN}thankyou`,
+      successUrl: successUrl,
       businessOrderingId: orderingId,
     });
   };
