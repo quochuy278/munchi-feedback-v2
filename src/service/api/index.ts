@@ -1,5 +1,5 @@
 import axios from "axios";
-import { StripeSessionData } from "./index.type";
+import { Business, StripeSessionData } from "./index.type";
 import { Feedback } from "@/features/FeedbackRating/FeedbackRating.type";
 
 const fetchDataWithSlug = async (slug: string) => {
@@ -10,8 +10,7 @@ const fetchDataWithSlug = async (slug: string) => {
 
     return response.data.result;
   } catch (error: any) {
-    console.log(error);
-    throw new Error(`Failed to fetch: ${error.message}`);
+    throw new Error(error);
   }
 };
 
@@ -20,6 +19,8 @@ const createStripeSession = async ({
   productDescription,
   productName,
   tipValue,
+  successUrl,
+  businessOrderingId,
 }: StripeSessionData) => {
   try {
     const response = await axios(
@@ -27,10 +28,12 @@ const createStripeSession = async ({
       {
         method: "post",
         data: {
+          businessOrderingId: businessOrderingId,
           businessSlug: businessSlug,
           productDescription: productDescription,
           productName: productName,
           tipValue: tipValue,
+          successUrl: successUrl,
         },
       }
     );
@@ -52,4 +55,16 @@ const submitFeedback = async (feedback: Feedback[]) => {
   }
 };
 
-export { fetchDataWithSlug, createStripeSession, submitFeedback };
+const saveBusiness = async (business: Business) => {
+  try {
+    const response = await axios.post(
+      `${process.env.NEXT_PUBLIC_PRIVATE_DOMAIN}business/create`,
+      business
+    );
+    return response.data;
+  } catch (error: any) {
+    throw new Error(`Failed to save business: ${error.message}`);
+  }
+};
+
+export { fetchDataWithSlug, createStripeSession, submitFeedback, saveBusiness };
