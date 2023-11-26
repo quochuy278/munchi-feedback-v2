@@ -1,7 +1,5 @@
-import Layout from "@/components/Layout";
-import React from "react";
-import Feedback from "./feedback/page";
 import FeedbackHeader from "@/components/Header";
+import React from "react";
 
 interface MobileLayout {
   children: React.ReactNode;

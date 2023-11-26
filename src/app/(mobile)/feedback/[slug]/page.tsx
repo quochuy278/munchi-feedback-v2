@@ -1,9 +1,7 @@
 import { fetchDataWithSlug, saveBusiness } from "@/service/api";
-import { useBusinessStore } from "@/store";
 import { Metadata, NextPage } from "next";
 import dynamic from "next/dynamic";
-import { notFound, redirect } from "next/navigation";
-import React from "react";
+import { redirect } from "next/navigation";
 
 export const metadata: Metadata = {
   title: {
