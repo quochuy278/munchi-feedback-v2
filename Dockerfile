@@ -7,7 +7,7 @@ WORKDIR /usr/src/app
 # A wildcard is used to ensure copying both package.json AND package-lock.json (when available).
 # Copying this first prevents re-running npm install on every code change.
 COPY --chown=node:node package*.json ./
-
+COPY --chown=node:node  ./scripts/gcloud_start.sh ./gcloud_start.sh
 # Install app dependencies using the `npm ci` command instead of `npm install`
 RUN npm ci
 
@@ -16,7 +16,9 @@ COPY --chown=node:node . .
 
 ENV NODE_ENV production
 
+EXPOSE 3000
+
 # Run the build command which creates the production bundle
 RUN npm run build
 
-CMD ["npm run dev"]
+CMD ["./gcloud_start.sh"]
