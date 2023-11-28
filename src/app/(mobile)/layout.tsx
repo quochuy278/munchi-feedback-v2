@@ -7,12 +7,10 @@ interface MobileLayout {
 
 const layout = ({ children }: MobileLayout) => {
   return (
-    <div className="w-screen h-screen flex justify-center items-center">
-      <div className="w-screen md:max-w-sm">
-        <FeedbackHeader />
-        <div className="w-screen md:max-w-sm md:max-h-[50rem] h-[calc(100vh-64px)]  bg-white flex justify-center flex-col items-center overscroll-none touch-none">
-          {children}
-        </div>
+    <div className="w-screen md:max-w-sm h-screen flex flex-col justify-center items-center">
+      <FeedbackHeader />
+      <div className="w-screen md:max-w-sm md:max-h-[50rem] h-[calc(100vh-64px)] xs:h-[calc(100dvh)] bg-white flex justify-center flex-col flex-wrap items-center overscroll-none">
+        {children}
       </div>
     </div>
   );
