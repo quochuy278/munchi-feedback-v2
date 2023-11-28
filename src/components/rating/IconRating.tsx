@@ -52,7 +52,7 @@ const IconRating = ({ rating, selectRating }: IconRatingProps) => {
   };
 
   return (
-    <div className="flex flex-wrap justify-evenly w-full mt-2">
+    <div className="flex flex-wrap justify-evenly w-full mt-2  xs:mt-1">
       {Icons.map((icon: Icon, index: number) => {
         return (
           <button
