@@ -26,6 +26,10 @@ module.exports = {
       animation: {
         fadeIn: "fadeIn 0.5s ease-in-out", // Adjust the duration as needed
       },
+      screens: {
+        // => @media (max-width: 479px)
+        xs: { max: "479px" }
+      }
     },
   },
   plugins: [require("daisyui")],
