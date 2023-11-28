@@ -16,7 +16,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body>
+      <body className="w-screen h-screen flex justify-center items-center">
         <Providers>{children}</Providers>
       </body>
     </html>

@@ -137,7 +137,7 @@ const FeedbackRating = ({ business }: { business: any }) => {
 
   return (
     <div className="flex flex-col justify-between w-full h-full">
-      <div className="flex flex-col gap-1 place-items-center h-1/2 p-4">
+      <div className="flex flex-col gap-1 place-items-center h-1/2 p-4 xs:p-0">
         <div className="avatar  mt-6">
           <div className="w-24 rounded-full">
             <Image
@@ -151,19 +151,19 @@ const FeedbackRating = ({ business }: { business: any }) => {
         </div>
         <h2 className="text-black text-2xl">{business?.name}</h2>
         <div className="w-full p-4 flex flex-col flex-wrap place-items-center text-center">
-          <h5 className="text-black text-xl font-medium">
+          <h5 className="text-black text-xl font-medium xs:text-lg">
             {feedbacksTemplates[currentPage].question}
           </h5>
-          <p className="text-black mt-1">
+          <p className="text-black mt-1 xs:text-sm">
             Your feedback helps us improve our service.
           </p>
         </div>
         <IconRating rating={ratingSelected} selectRating={handleSelectRating} />
         <div className="w-full p-4 flex flex-col flex-wrap place-items-center text-center">
-          <h5 className="text-black text-xl font-medium">
+          <h5 className="text-black text-xl font-medium xs:text-lg">
             What could we improve?
           </h5>
-          <p className="text-black mt-1">
+          <p className="text-black mt-1 xs:text-sm">
             Your feedback helps us improve our products.
           </p>
         </div>
