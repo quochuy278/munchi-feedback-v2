@@ -1,4 +1,4 @@
-FROM node:18-alpine3.18
+FROM node:18-slim
 
 # Create app directory
 WORKDIR /usr/src/app
@@ -16,9 +16,7 @@ COPY --chown=node:node . .
 
 ENV NODE_ENV production
 
-EXPOSE 3000
-
 # Run the build command which creates the production bundle
 RUN npm run build
 
-CMD ["./gcloud_start.sh"]
+CMD ["bash", "./gcloud_start.sh"]

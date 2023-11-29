@@ -10,8 +10,8 @@ pwd
 echo "Contents of the prisma directory:"
 ls -al node_modules/prisma
 
-npx prisma generate
+#npx prisma generate
 
-npx prisma db push --accept-data-loss
+#npx prisma db push --accept-data-loss
 
 npm start
