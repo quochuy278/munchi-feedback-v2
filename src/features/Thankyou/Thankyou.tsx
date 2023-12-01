@@ -54,6 +54,10 @@ const Thankyou = ({ tipSuccess }: { tipSuccess?: boolean }) => {
     });
   };
 
+  const redicrectHandler = () => {
+    router.replace("../thankyou");
+  };
+
   const handleSubmitNewFeedback = () => {
     clearAll();
     router.push(`../feedback/${slug}`);
@@ -93,8 +97,9 @@ const Thankyou = ({ tipSuccess }: { tipSuccess?: boolean }) => {
             className={`w-full btn btn-primary ${
               tipSuccess && "btn-outline"
             } normal-case border-none mb-2`}
+            onClick={redicrectHandler}
           >
-            <a href="../thankyou">No! Thanks</a>
+            No! Thanks
           </button>
         )}
 
