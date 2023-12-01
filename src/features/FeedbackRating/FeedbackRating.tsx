@@ -24,6 +24,7 @@ const FeedbackRating = ({ business }: { business: any }) => {
     feedback,
     addFeedback,
     updateFeedback,
+    clearAll,
   } = useFeedbackStore();
   const { setBusiness, orderingId } = useBusinessStore();
   const router = useRouter();
@@ -122,6 +123,7 @@ const FeedbackRating = ({ business }: { business: any }) => {
         feedbackToSubmit = feedback;
       }
       try {
+        clearAll();
         return mutation.mutate(feedbackToSubmit);
       } catch (error) {
         return error;

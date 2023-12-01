@@ -25,11 +25,11 @@ const Thankyou = ({ tipSuccess }: { tipSuccess?: boolean }) => {
       ? window.location.protocol
       : "";
 
-  useEffect(() => {
-    if (!feedback || feedback.length === 0) {
-      redirect(`../feedback/${slug}`);
-    }
-  }, [feedback, slug]);
+  // useEffect(() => {
+  //   if (!feedback || feedback.length === 0) {
+  //     redirect(`../feedback/${slug}`);
+  //   }
+  // }, [feedback, slug]);
 
   const handleSelectTip = (tipValue: number) => {
     setTipAmount(tipValue);
@@ -59,7 +59,6 @@ const Thankyou = ({ tipSuccess }: { tipSuccess?: boolean }) => {
   };
 
   const handleSubmitNewFeedback = () => {
-    clearAll();
     router.push(`../feedback/${slug}`);
   };
 
