@@ -8,7 +8,7 @@ pwd
 
 # List the contents of the current directory
 echo "Contents of the prisma directory:"
-ls -al node_modules/prisma
+# ls -al node_modules/prisma
 
 #npx prisma generate
 
