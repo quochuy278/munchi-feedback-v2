@@ -136,7 +136,7 @@ const FeedbackRating = ({ business }: { business: any }) => {
   const handleBackHandler = () => {
     prevPage(1);
   };
-
+  // TODO: Fix the button with position absolute so it will always be at the bottom of the screen in every device
   return (
     <div className="flex flex-col justify-between w-full h-full">
       <div className="flex flex-col gap-1 place-items-center h-1/2 p-4 xs:p-0">

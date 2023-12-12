@@ -87,7 +87,7 @@ const TagRating = ({
     submitComment(comment);
     setOpen(false);
   };
-
+  // TODO: The comment will be overflow if it is too long
   return (
     <div className="w-full h-[auto] p-0.5 round-md flex justify-center flex-wrap animate-fadeIn gap-2 mt-2">
       {collection.map((tagLabel: string, index: number) => {
